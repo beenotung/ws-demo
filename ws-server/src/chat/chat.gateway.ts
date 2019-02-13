@@ -1,7 +1,7 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { NestGateway } from '@nestjs/websockets/interfaces/nest-gateway.interface';
 import { Socket } from 'socket.io';
-import { ChatDTO, ChatMessage } from './chat.type';
+import { ChatCommand, ChatMessage } from './chat-command.type';
 import { ChatResult } from './chat-result.type';
 
 export let chats: ChatMessage[] = [];
@@ -16,7 +16,7 @@ export class ChatGateway implements NestGateway {
   sessions = new Map<string, Session>();
 
   @SubscribeMessage('message')
-  handleMessage(socket: Socket, payload: ChatDTO): string {
+  handleMessage(socket: Socket, payload: ChatCommand): string {
     const result = this.handler(socket, payload);
     socket.emit('message', result);
     if (typeof result === 'string') {
@@ -26,7 +26,7 @@ export class ChatGateway implements NestGateway {
     }
   }
 
-  handler(socket: Socket, payload: ChatDTO): ChatResult {
+  handler(socket: Socket, payload: ChatCommand): ChatResult {
     switch (payload.type) {
       case 'login':
         this.sessions.set(socket.id, {

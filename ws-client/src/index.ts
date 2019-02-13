@@ -1,11 +1,11 @@
 import io from 'socket.io-client';
+import { ChatCommand } from './chat-command.type';
 import { ChatResult } from './chat-result.type';
-import { ChatDTO } from './chat.type';
 import Socket = SocketIOClient.Socket;
 
 const socket = io('ws://localhost:3000/chat');
 
-export function sendMessage(dto: ChatDTO) {
+export function sendMessage(dto: ChatCommand) {
   socket.emit('message', dto);
 }
 
